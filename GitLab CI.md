@@ -9,7 +9,7 @@ check_interval = 0
   session_timeout = 1800
 
 [[runners]]
-  name = "Runner Hieu Dep Trai"
+  name = "Runner Name"
   url = "https://xxx.xxx"
   token = "sacdscsd"
   executor = "docker"
@@ -28,7 +28,7 @@ check_interval = 0
     [runners.cache.gcs]
 ```
 
-## Cài đặt GitLab Runner
+## Setup GitLab Runner
 ```bash
 docker run -t -i --name gitlab-runner --restart always \
   -v /srv/gitlab-runner/config:/etc/gitlab-runner \
@@ -52,7 +52,6 @@ services:
 	- mysql:5.7.20
 
 variables:
-	PACKAGE_PATH:  /go/src/gitlab.com/phanletrunghieu/bot-net
 	# Configure postgres service (https://hub.docker.com/_/postgres/)
 	POSTGRES_DB:  nice_marmot
 	POSTGRES_USER:  runner
@@ -103,4 +102,16 @@ build:
 	stage:  build
 	script:
 		- make build
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  script: 
+    - ls
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - ssh -tt root@$SERVER " docker pull $CONTAINER_RELEASE_IMAGE && docker-compose up -d"
 ```

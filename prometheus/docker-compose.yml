@@ -1,0 +1,49 @@
+version: "3"
+
+volumes:
+  grafana-storage:
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.11.1
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./rules.yml:/etc/prometheus/rules.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      - alertmanager
+    ports:
+      - '9090:9090'
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - '9100:9100'
+  grafana:
+    image: grafana/grafana:6.2.4
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    user: "104"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+  alertmanager:
+    image: prom/alertmanager:v0.18.0
+    volumes:
+      - ./alertmanager.yml:/alertmanager.yml
+    command:
+      - --config.file=/alertmanager.yml
+    ports:
+      - "9093:9093"
+  cadvisor:
+    image: google/cadvisor:v0.33.0
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
