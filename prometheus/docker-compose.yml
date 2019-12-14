@@ -47,3 +47,19 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+  alertmanager-bot:
+    image: metalmatze/alertmanager-bot:0.4.0
+    environment:
+      - ALERTMANAGER_URL=http://alertmanager:9093
+      - BOLT_PATH=/data/bot.db
+      - LISTEN_ADDR=0.0.0.0:8080
+      - STORE=bolt
+      - TELEGRAM_ADMIN=xxx
+      - TELEGRAM_TOKEN=xxx:xxx
+      - TEMPLATE_PATHS=/templates/default.tmpl
+    volumes:
+      - /srv/monitoring/alertmanager-bot:/data
+    restart: always
+    ports:
+      - 7070:8080
+    

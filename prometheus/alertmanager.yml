@@ -7,3 +7,7 @@ receivers:
             username: 'Prometheus'
             channel: '#random'
             api_url: 'https://hooks.slack.com/services/xxx/xxx/xxx'
+      webhook_configs:
+          - send_resolved: true
+            url: 'http://alertmanager-bot:7070'
+    

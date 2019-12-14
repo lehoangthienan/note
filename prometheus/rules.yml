@@ -18,3 +18,33 @@ groups:
       annotations:
         summary: "High request latency on {{ $labels.instance }}"
         description: "{{ $labels.instance }} has a median request latency above 1s (current value: {{ $value }}s)"
+
+    # Alert cpu over 60% > 2m
+    - alert: HighCpuLoad
+      expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 60
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU load (instance {{ $labels.instance }})"
+        description: "CPU load is > 60%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    # swap over 80%
+    - alert: SwapIsFillingUp
+      expr: (1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Swap is filling up (instance {{ $labels.instance }})"
+        description: "Swap is filling up (>80%)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    # Out of disk space < 10%
+    - alert: OutOfDiskSpace
+      expr: node_filesystem_free_bytes{mountpoint ="/rootfs"} / node_filesystem_size_bytes{mountpoint ="/rootfs"} * 100 < 10
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Out of disk space (instance {{ $labels.instance }})"
+        description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
