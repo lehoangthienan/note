@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myjob
+spec:
+  completions: 10
+  backoffLimit: 3
+  parallelism: 2
+  activeDeadlineSeconds: 120
+
+  template:
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+          - /bin/sh
+          - -c
+          - date; echo "Job executed"
+      restartPolicy: Never

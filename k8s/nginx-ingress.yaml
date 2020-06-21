@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  namespace: nginx-ingress
+spec:
+  rules:
+  - host: anle.test
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: http-skinapp-svc
+          servicePort: 3000

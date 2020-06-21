@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skinapp
+  labels:
+    run: http-skinapp-svc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: skinapp
+  template:
+    metadata:
+      name: skinapp
+      labels:
+        app: skinapp
+    spec:
+      volumes:
+      - name: volumeuploads
+        persistentVolumeClaim:
+          claimName: pvc1
+      - name: volumemongodb
+        persistentVolumeClaim:
+          claimName: pvc2
+      containers:
+      - name: skinbiology
+        image: skinbiologyimage
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "200Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 27017
+            protocol: TCP
+        volumeMounts:
+        - mountPath: "/uploads"
+          name: volumeuploads
+      - name: mongoskin
+        image: mongo
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        volumeMounts:
+        - mountPath: "/data"
+          name: volumemongodb

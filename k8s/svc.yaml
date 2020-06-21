@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc1
+spec:
+  selector:
+     app: skinapp
+  type: NodePort
+  ports:
+    - name: portskin
+      port: 3000
+      targetPort: 3000
+      nodePort: 31080
+      protocol: TCP
+    - name: portmongo
+      port: 27017
+      targetPort: 27017
+      nodePort: 31081
+      protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc2
+spec:
+  selector:
+     app: skinapp
+  type: LoadBalancer
+  ports:
+    - name: portskin
+      port: 3000
+      targetPort: 3000
+      nodePort: 31090
+      protocol: TCP
+    - name: portmongo
+      port: 27017
+      targetPort: 27017
+      nodePort: 31091
+      protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-skinapp-svc
+  namespace: nginx-ingress
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: skinapp
+  sessionAffinity: None
+  type: ClusterIP
