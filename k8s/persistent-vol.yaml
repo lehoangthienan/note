@@ -11,7 +11,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/anle/User/k8s/test/uploads"
+    path: "/Users/anle/User/github/note/k8s/uploads"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -26,4 +26,20 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/anle/User/k8s/test/mongo"
+    path: "/Users/anle/User/github/note/k8s/mongo"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv3
+  namespace: nginx-ingress
+  labels:
+    name: pv3
+spec:
+  storageClassName: pvskinupload
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/Users/anle/User/github/note/k8s/uploads"

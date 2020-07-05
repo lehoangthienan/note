@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  namespace: nginx-ingress
+spec:
+  tls:
+    - hosts:
+      - anle.test
+      secretName: anle-test
+      # secretName: default-server-secret
+  rules:
+  - host: anle.test
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: http-test-svc
+          servicePort: 80

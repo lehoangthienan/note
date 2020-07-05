@@ -25,3 +25,18 @@ spec:
   resources:
     requests:
       storage: 2000Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc1
+  labels:
+    name: pvc1
+  namespace: nginx-ingress
+spec:
+  storageClassName: pvskinupload
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 350Mi

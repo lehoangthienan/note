@@ -4,6 +4,10 @@ metadata:
   name: app
   namespace: nginx-ingress
 spec:
+  tls:
+    - hosts:
+      - anle.test
+      secretName: default-server-secret
   rules:
   - host: anle.test
     http:
