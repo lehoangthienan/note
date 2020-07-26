@@ -49,6 +49,8 @@ https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler
 https://github.com/jetstack/cert-manager
 
 ### NGINX Ingress
+https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps
+
 https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud/deploy.yaml
@@ -87,3 +89,37 @@ mv ~/.kube/config_temp ~/.kube/config
 kubectl config use-context kubernetes-admin@kubernetes
 
 ### cert-manager
+https://cert-manager.io/docs/installation/kubernetes/
+
+1. Apply the yaml config file
+
+kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
+
+2. Create the namespace for cert-manager
+
+kubectl create namespace cert-manager
+
+3. Add the Jetstack Helm repository
+
+helm repo add jetstack https://charts.jetstack.io
+
+4. Update your local Helm chart repository cache
+
+helm repo update
+
+5.  Install the cert-manager Helm chart:
+
+Helm v2:
+
+helm install \
+  --name cert-manager \
+  --namespace cert-manager \
+  --version v0.11.0 \
+  jetstack/cert-manager
+Helm v3:
+
+helm install \
+  cert-manager \
+  --namespace cert-manager \
+  --version v0.11.0 \
+  jetstack/cert-manager
